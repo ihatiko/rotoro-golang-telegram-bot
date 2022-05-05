@@ -2,7 +2,8 @@ package internal
 
 import (
 	"encoding/json"
-	"fmt"
+	"github.com/julienschmidt/httprouter"
+	"github.com/rs/zerolog/log"
 	"net/http"
 	"rotoro-golang-telegram-bot/internal/modules"
 	telegramClient "rotoro-golang-telegram-bot/pkg/telegram-client"
@@ -19,13 +20,20 @@ func NewHandlers() *Handlers {
 }
 
 // Handler Обработчик запросов
-func (s *Handlers) Handler(res http.ResponseWriter, req *http.Request) {
+func (s *Handlers) Handler(res http.ResponseWriter, req *http.Request, ps httprouter.Params) {
 	body := &models.WebHookBody{}
 	defer req.Body.Close()
-	if err := json.NewDecoder(req.Body).Decode(body); err != nil {
-		fmt.Println("could not decode request body", err)
+	decoder := json.NewDecoder(req.Body)
+	if err := decoder.Decode(body); err != nil {
+		log.Error().Err(err).Msg("could not decode request body")
 		return
 	}
 	msgBody := modules.Module1Handler(body.Message.Text)
 	s.Client.SendResponse(msgBody, body.Message.Chat.ID)
+}
+func (s *Handlers) HealthCheckHandler(res http.ResponseWriter, req *http.Request, ps httprouter.Params) {
+	_, err := res.Write([]byte("ok"))
+	if err != nil {
+		log.Info().Err(err).Msg("get healthCheck")
+	}
 }

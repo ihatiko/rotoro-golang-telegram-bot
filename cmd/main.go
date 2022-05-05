@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"github.com/julienschmidt/httprouter"
+	"github.com/rs/zerolog/log"
 	"net/http"
 	"os"
 	"rotoro-golang-telegram-bot/internal"
@@ -20,5 +22,15 @@ func NewServer() *Server {
 
 func (s *Server) Serve() {
 	handlers := internal.NewHandlers()
-	http.ListenAndServe(s.Port, http.HandlerFunc(handlers.Handler))
+	router := httprouter.New()
+
+	router.POST("/", handlers.Handler)
+	router.GET("/health", handlers.HealthCheckHandler)
+
+	err := http.ListenAndServe(s.Port, router)
+	if err != nil {
+		log.Fatal().Err(err).Msg("http.ListenAndServe")
+	} else {
+		log.Info().Msgf("start server on port %s", s.Port)
+	}
 }
