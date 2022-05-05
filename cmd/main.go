@@ -26,11 +26,9 @@ func (s *Server) Serve() {
 
 	router.POST("/", handlers.Handler)
 	router.GET("/health", handlers.HealthCheckHandler)
-
+	log.Info().Msgf("start server on port %s", s.Port)
 	err := http.ListenAndServe(s.Port, router)
 	if err != nil {
 		log.Fatal().Err(err).Msg("http.ListenAndServe")
-	} else {
-		log.Info().Msgf("start server on port %s", s.Port)
 	}
 }
