@@ -33,7 +33,7 @@ func (c *Client) registryWebHook() {
 		return
 	}
 	res, err := http.Post(
-		fmt.Sprintf("%s%s", c.Path, sendMessage),
+		fmt.Sprintf("%s%s", c.Path, setWebHook),
 		applicationJsonHeader,
 		bytes.NewBuffer(body))
 	if err != nil {
