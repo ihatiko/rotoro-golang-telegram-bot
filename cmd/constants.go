@@ -1,7 +1,8 @@
 package cmd
 
 const (
-	port        = "port"
-	empty       = ""
-	defaultPort = ":3000"
+	port                 = "port"
+	telegramRegistryHost = "telegram-registry-host"
+	empty                = ""
+	defaultPort          = ":3000"
 )

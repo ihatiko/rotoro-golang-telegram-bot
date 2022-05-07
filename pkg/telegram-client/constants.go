@@ -6,5 +6,8 @@ const (
 
 const (
 	telegramUrl = "https://api.telegram.org/"
-	webhookPath = "/sendMessage"
+)
+const (
+	sendMessage = "/sendMessage"
+	setWebHook  = "/setWebhook"
 )
