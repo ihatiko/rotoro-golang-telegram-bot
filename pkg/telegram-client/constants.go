@@ -5,7 +5,7 @@ const (
 )
 
 const (
-	telegramUrl = "https://api.telegram.org/"
+	telegramUrl = "https://api.telegram.org/bot"
 )
 const (
 	sendMessage = "/sendMessage"

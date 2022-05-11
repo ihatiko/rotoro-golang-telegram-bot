@@ -17,7 +17,7 @@ type Client struct {
 }
 
 func NewClient(apiKey, telegramRegistryHost string, autoRegistry bool) *Client {
-	url := fmt.Sprintf("%s%s%s", telegramUrl, apiKey)
+	url := fmt.Sprintf("%s%s", telegramUrl, apiKey)
 	client := &Client{Path: url, AutoRegistry: autoRegistry, TelegramRegistryHost: telegramRegistryHost}
 	if client.AutoRegistry {
 		client.registryWebHook()
@@ -32,8 +32,9 @@ func (c *Client) registryWebHook() {
 		log.Error().Err(err).Msg("registryWebHook")
 		return
 	}
+	path := fmt.Sprintf("%s%s", c.Path, setWebHook)
 	res, err := http.Post(
-		fmt.Sprintf("%s%s", c.Path, setWebHook),
+		path,
 		applicationJsonHeader,
 		bytes.NewBuffer(body))
 	if err != nil {
@@ -43,14 +44,9 @@ func (c *Client) registryWebHook() {
 		log.Error().Err(err).Msgf("unexpected status %s", res.Status)
 	}
 
-	var buffer []byte
-	_, err = res.Body.Read(buffer)
-	if err != nil {
-		log.Error().Err(err).Msg("res.Body.Read(buffer)")
-		return
-	}
 	response := &models.RegistryWebHookResponse{}
-	err = json.Unmarshal(buffer, response)
+	decoder := json.NewDecoder(res.Body)
+	err = decoder.Decode(&response)
 	if err != nil {
 		log.Error().Err(err).Msg("json.Unmarshal(buffer, response)")
 		return

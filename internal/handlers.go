@@ -14,8 +14,8 @@ type Handlers struct {
 	Client *telegramClient.Client
 }
 
-func NewHandlers() *Handlers {
-	client := telegramClient.NewClient("")
+func NewHandlers(serverHost string) *Handlers {
+	client := telegramClient.NewClient("5378603292:AAHcigJ9ifEZLsycjOALyTz-QHO1cR-Or_g", serverHost, true)
 	return &Handlers{Client: client}
 }
 

@@ -23,7 +23,7 @@ func NewServer() *Server {
 }
 
 func (s *Server) Serve() {
-	handlers := internal.NewHandlers()
+	handlers := internal.NewHandlers(s.TelegramRegistryHost)
 
 	router := s.GetRouter(handlers)
 	log.Info().Msgf("start server on port %s", s.Port)
